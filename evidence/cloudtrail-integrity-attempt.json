@@ -1,0 +1,8 @@
+{
+  "source": "AWS CLI cloudtrail validate-logs observed through CloudShell",
+  "start_time_utc": "2026-10-25T03:26:00Z",
+  "end_time_utc": "2026-10-25T03:54:57Z",
+  "observed_output": "No digests found",
+  "result": "INCOMPLETE",
+  "reason": "No available digest files in this interval; zero files is not a successful cryptographic integrity test"
+}

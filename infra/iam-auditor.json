@@ -1,0 +1,107 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Optional IAM-user MFA exercise for a suitable standard/advanced account. Not Builder ID MFA enforcement.",
+  "Parameters": {
+    "TrustedIamUserArn": {
+      "Type": "String",
+      "AllowedPattern": "arn:aws:iam::[0-9]{12}:user/.+",
+      "Description": "Existing approved IAM user; never an account-root or role ARN."
+    },
+    "EvidenceBucketName": {
+      "Type": "String",
+      "AllowedPattern": "[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]"
+    },
+    "KeyArn": {
+      "Type": "String",
+      "AllowedPattern": "arn:aws:kms:[a-z0-9-]+:[0-9]{12}:key/[a-f0-9-]+"
+    }
+  },
+  "Resources": {
+    "Auditor": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "MaxSessionDuration": 3600,
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Ref": "TrustedIamUserArn"
+                }
+              },
+              "Action": "sts:AssumeRole",
+              "Condition": {
+                "Bool": {
+                  "aws:MultiFactorAuthPresent": "true"
+                },
+                "StringEquals": {
+                  "aws:PrincipalAccount": {
+                    "Ref": "AWS::AccountId"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "ReadLabEvidence",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "ListBucket",
+                  "Effect": "Allow",
+                  "Action": "s3:ListBucket",
+                  "Resource": {
+                    "Fn::Sub": "arn:${AWS::Partition}:s3:::${EvidenceBucketName}"
+                  }
+                },
+                {
+                  "Sid": "ReadObjects",
+                  "Effect": "Allow",
+                  "Action": "s3:GetObject",
+                  "Resource": {
+                    "Fn::Sub": "arn:${AWS::Partition}:s3:::${EvidenceBucketName}/*"
+                  }
+                },
+                {
+                  "Sid": "DecryptEvidence",
+                  "Effect": "Allow",
+                  "Action": "kms:Decrypt",
+                  "Resource": {
+                    "Ref": "KeyArn"
+                  },
+                  "Condition": {
+                    "StringEquals": {
+                      "kms:ViaService": {
+                        "Fn::Sub": "s3.${AWS::Region}.${AWS::URLSuffix}"
+                      }
+                    },
+                    "StringLike": {
+                      "kms:EncryptionContext:aws:s3:arn": {
+                        "Fn::Sub": "arn:${AWS::Partition}:s3:::${EvidenceBucketName}/*"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "AuditorRoleArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "Auditor",
+          "Arn"
+        ]
+      }
+    }
+  }
+}

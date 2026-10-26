@@ -1,0 +1,446 @@
+{
+  "feed_version": "202610241320",
+  "scope": "nginx-named VTs plus SYN port discovery; dependencies enabled; TCP80 only",
+  "tests": [
+    {
+      "file": "gb_fedora_2007_1158_nginx_fc7.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.861232",
+      "file_sha256": "e6f72c19c193f42fbf9bfaa5a29775ea1b5d4474d4a0c79ca5db4540ba61de69"
+    },
+    {
+      "file": "gb_fedora_2009_12750_nginx_fc12.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.66449",
+      "file_sha256": "842afbc2aec48e3df447753ee643538195f9515c0fe674f22cf36946c8a37b9e"
+    },
+    {
+      "file": "gb_fedora_2009_12775_nginx_fc10.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.66450",
+      "file_sha256": "c13acc3f6267bcd2e4385d9f026b871f9b0521694489e756f752c151573f52dd"
+    },
+    {
+      "file": "gb_fedora_2009_12782_nginx_fc11.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.66451",
+      "file_sha256": "eca703c1aadf53eac1fecc6f7bdfc8101cda51c51d9622e642bd04443f69baa0"
+    },
+    {
+      "file": "gb_fedora_2009_9630_nginx_fc11.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.64911",
+      "file_sha256": "67a495dde30f16e5fe97c1d8078cfe9e235bf196aa0d84806b2305ed379a458d"
+    },
+    {
+      "file": "gb_fedora_2009_9652_nginx_fc10.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.64912",
+      "file_sha256": "ae1904e6a19801adbd9cac8eb4c873dbd7fbba62cb140a94fdf0b526714d4279"
+    },
+    {
+      "file": "gb_fedora_2011_16075_nginx_fc16.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.864065",
+      "file_sha256": "5e6c5c1c524cc4be3051393cbb355b2c98941aa93cd42106aa84dbd497e35962"
+    },
+    {
+      "file": "gb_fedora_2011_16110_nginx_fc15.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.863654",
+      "file_sha256": "88ac45f0e878476788c8878f575084d92922fa302d2a4e8da280189fabacfb7d"
+    },
+    {
+      "file": "gb_fedora_2012_3846_nginx_fc17.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.864418",
+      "file_sha256": "3c2545476bac46e1b69b92b9307bfba2e44fd093f15fe942df79d689d3e2ff80"
+    },
+    {
+      "file": "gb_fedora_2012_3991_nginx_fc16.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.864115",
+      "file_sha256": "962be049c5fa79736aae399cc365e8a77043ce1808ff098f75cd83722a8ff411"
+    },
+    {
+      "file": "gb_fedora_2012_4006_nginx_fc15.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.864121",
+      "file_sha256": "3b527ad773debc2048e7078fc26904ad6fce5c62f48bc816dc2783037eb7175f"
+    },
+    {
+      "file": "gb_fedora_2012_6238_nginx_fc17.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.864310",
+      "file_sha256": "9d4af86ddc2e1a985403fdf1690c269073dcc4f540a42152b8264a1955a5907f"
+    },
+    {
+      "file": "gb_fedora_2012_6371_nginx_fc15.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.864204",
+      "file_sha256": "d6421c64427c3c7e6659c6a58da96c4c419403fbc24674fea24b4d0160fce1c1"
+    },
+    {
+      "file": "gb_fedora_2012_6411_nginx_fc16.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.864209",
+      "file_sha256": "026f30a7f4c0241a682f8ef4bea6507f3e0ded10ed02c4397d035dd29d53e095"
+    },
+    {
+      "file": "gb_fedora_2013_21826_nginx_fc19.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.867093",
+      "file_sha256": "5072412cc1f8c75f248430a1b48ae6a209e9ac660ffa8f8df7f0610f928b045f"
+    },
+    {
+      "file": "gb_fedora_2013_2955_nginx_fc17.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.865417",
+      "file_sha256": "62a0f2fdd3f7eac2f7df6b57036f344bd4a33c2c9cf62a6e85c317174dce95a7"
+    },
+    {
+      "file": "gb_fedora_2013_2974_nginx_fc18.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.865407",
+      "file_sha256": "45b8faa83c1deba2861d4744494213c18b540051add0fee618545d7f0b01dfc0"
+    },
+    {
+      "file": "gb_fedora_2013_8182_nginx_fc18.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.865640",
+      "file_sha256": "cea49419d3d80fa40837bc91470b708f4c6ff7e425efc6d1ff141fe1f800858a"
+    },
+    {
+      "file": "gb_fedora_2014_11370_nginx_fc19.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.868376",
+      "file_sha256": "d6ac242ff15cc9f1196f2e61a970c6f82f05560f481e82e0157f6623bd29d975"
+    },
+    {
+      "file": "gb_fedora_2014_11415_nginx_fc20.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.868378",
+      "file_sha256": "cd1708afa1325d95b7d5546992849bd4f8ab7bc1e7bac8039da2c21bc121acbe"
+    },
+    {
+      "file": "gb_fedora_2016_c329fc4c32_nginx_fc24.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.808464",
+      "file_sha256": "d4a29372c57f4a56022fe73742e9e7bab21fb3f8d08ecd8d810231889516571d"
+    },
+    {
+      "file": "gb_fedora_2016_ea323bd6cf_nginx_fc23.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.808376",
+      "file_sha256": "ea14f4b54b697d698fc738aae3eaf689bbd1faa34e3d38568833c682ccfe897b"
+    },
+    {
+      "file": "gb_fedora_2017_aecd25b8a9_nginx_fc26.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.873300",
+      "file_sha256": "6084cc5ed780f2e2ddf4e15ce8cb6373d31751e746e5fcf31196cb807a71d4cd"
+    },
+    {
+      "file": "gb_fedora_2017_c27a947af1_nginx_fc25.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.873309",
+      "file_sha256": "9a6ad5bd5566e543f3b219141810519c458d8d3af3ce0cdde30a0ac683496324"
+    },
+    {
+      "file": "gb_fedora_2018_7c540fdab4_nginx_fc29.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.875955",
+      "file_sha256": "f3bb7f471511f28a70e8cd6c71b5679e5d3a92224df6a6c7b1a2b2a2be6555d0"
+    },
+    {
+      "file": "gb_fedora_2019_7a0b45fdc4_nginx_fc29.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.876748",
+      "file_sha256": "cee23a7a67346fa16cf9c69e4134c5f839d89c6eff38b04985dead00b55dcd3e"
+    },
+    {
+      "file": "gb_fedora_2021_031436cb0e_nginx_fc34.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.879807",
+      "file_sha256": "ab0c921106b0dfe7d9a8be38d08d707531dd9d7673cf25046dfde757ebaa2136"
+    },
+    {
+      "file": "gb_fedora_2021_10c1cd4cba_nginx_fc33.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.879490",
+      "file_sha256": "0785cb4aa1c095f615322594936ceb8589b3ad6692a14783f0ac2904b2f442ca"
+    },
+    {
+      "file": "gb_fedora_2021_1556d440ba_nginx_fc32.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.879496",
+      "file_sha256": "d458fd56acbaf316d21c91dc86071cb2f72c22a955fb277d414fc2bdaa294e4e"
+    },
+    {
+      "file": "gb_fedora_2021_393d698493_nginx_fc34.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.879756",
+      "file_sha256": "47d1c196b8bbb4566299aa1b0c3381ca14cb8934d8ad23a90d63114e75a336a3"
+    },
+    {
+      "file": "gb_fedora_2021_a856024cca_nginx_fc33.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.879805",
+      "file_sha256": "8de6b73d647c681df21a531c380a537e5f59cb599888c659d4e1a74ebd7f4984"
+    },
+    {
+      "file": "gb_fedora_2021_b37cffac0d_nginx_fc33.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.879726",
+      "file_sha256": "3a343a272155e8e347d91ea774c56a9896d69b8315fbc2ac757b5e29577278a4"
+    },
+    {
+      "file": "gb_fedora_2022_12721789aa_nginx_fc37.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.822753",
+      "file_sha256": "b15a0db2cb6a3e60f4aadab29c34b880c9fd13949665f13cfbdfb43e51bfd2cb"
+    },
+    {
+      "file": "gb_fedora_2024_6ba57fd2a3_nginx-mod-fancyindex_fc40.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.887418",
+      "file_sha256": "7cfb55291ad1b4cc308f1fad422f00c96ed196f1e1a956267cb6db6f47387a20"
+    },
+    {
+      "file": "gb_fedora_2024_6ba57fd2a3_nginx-mod-modsecurity_fc40.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.887424",
+      "file_sha256": "fed99b82de0fc969fe87b982dfd782856b0b038ef05d2320bcd0cd39b2fc9e7b"
+    },
+    {
+      "file": "gb_fedora_2024_6ba57fd2a3_nginx-mod-vts_fc40.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.887412",
+      "file_sha256": "8823b06ed61c8a70a07cc8471c95195a3ec5a9409197925db770197431152554"
+    },
+    {
+      "file": "gb_fedora_2024_6ba57fd2a3_nginx_fc40.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.887413",
+      "file_sha256": "437563e8a585dc130de3e90bc241a4c044fbcdb73c8ffc30623e56b24d6318c3"
+    },
+    {
+      "file": "gb_fedora_2024_8ba5080dfa_nginx-mod-fancyindex_fc39.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.887410",
+      "file_sha256": "71003e38b50d1163ea5acc42afadbd4832def35aec1b67883c697767ad71b82e"
+    },
+    {
+      "file": "gb_fedora_2024_8ba5080dfa_nginx-mod-naxsi_fc39.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.887419",
+      "file_sha256": "cffb2090d8d396b9eb408327f6ebf20f594acc4d46a7d6c92f5960feb49a2717"
+    },
+    {
+      "file": "gb_fedora_2024_8ba5080dfa_nginx-mod-vts_fc39.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.887416",
+      "file_sha256": "a7665e43dceaef59343cbc3c94f4153af9a55d28f5257c386dbb8384bbe7c11c"
+    },
+    {
+      "file": "gb_fedora_2024_8ba5080dfa_nginx_fc39.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.887425",
+      "file_sha256": "575652c2efdcf26b461eb83e7c60dd85e057b20a60cb76cb8f23548d5792b53d"
+    },
+    {
+      "file": "gb_linux_rootkit_nginx_iframe_injection.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.802045",
+      "file_sha256": "0d571b34ee92d0903d0cf7fe7945abc6acaa2de126f40f98f3c713528d7d9c4d"
+    },
+    {
+      "file": "gb_nginx_40420.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.100659",
+      "file_sha256": "a8458f398c4f8d666e536c5f43d3225ee73d61a0435ccf5cb805acdd990eac06"
+    },
+    {
+      "file": "gb_nginx_40434.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.100658",
+      "file_sha256": "6a3f396d55c911b410899653788abedd8b85f9aff0b2877b8fac91e0d07999cd"
+    },
+    {
+      "file": "gb_nginx_40760.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.100676",
+      "file_sha256": "d215aa1b6a6b655da9827ac69946385c8b740c05748ae5bf63fc5b39410e9d6c"
+    },
+    {
+      "file": "gb_nginx_50710.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.103344",
+      "file_sha256": "78396680acaeb3a47da86c01301132a8449ec76939f672b8061411cfb5314cf5"
+    },
+    {
+      "file": "gb_nginx_52578.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.103469",
+      "file_sha256": "91d084608b1f8f92b5647cb96a6211d67b5b903f7a21b01b9a7fdca1fc3014e1"
+    },
+    {
+      "file": "gb_nginx_52999.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.103470",
+      "file_sha256": "704ac3acc423bfe2512d2f156a37d0c47e01cb6394e68632ae14e6963bc91211"
+    },
+    {
+      "file": "gb_nginx_CVE-2009-3555.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.117522",
+      "file_sha256": "1ce1de4e6b4d6e39436cfde998ea503ad17072453b9ca9f4f126f6d92390cb75"
+    },
+    {
+      "file": "gb_nginx_CVE-2013-0337.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.117523",
+      "file_sha256": "0720abd328099bee07f231b1b1d06f238760181cf1534d027d64b0584e07f7c8"
+    },
+    {
+      "file": "gb_nginx_CVE-2013-2070.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.150667",
+      "file_sha256": "b3e2c0f4e6e28db445a1f4a9312f764fd90ed615584bdb9f1e5b1752b6bf3eab"
+    },
+    {
+      "file": "gb_nginx_CVE-2013-4547.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.150666",
+      "file_sha256": "0f42c7c186bb6f82c217eb0e02e3d698d0649d553205ec9bdb1dd2215ba47aca"
+    },
+    {
+      "file": "gb_nginx_CVE-2014-3616.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.150665",
+      "file_sha256": "3dd39d788bc06c73e8a70d65c231621a34276d8a129c72d400b39323e965de47"
+    },
+    {
+      "file": "gb_nginx_CVE-2016-4450.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.150664",
+      "file_sha256": "776dde7a676763105565c3a5ce290114de091f19163193194133eb8d82e4f7e5"
+    },
+    {
+      "file": "gb_nginx_CVE-2017-20005.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.117471",
+      "file_sha256": "f1937c0229b7ab34757f692347c20a1cfd9c876ed60202042d03e43c85857d1f"
+    },
+    {
+      "file": "gb_nginx_CVE-2021-23017.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.117455",
+      "file_sha256": "40d24c4fcf7c57f2b51f76ec67b48627ea2069206a98e0620f31096e80135e8f"
+    },
+    {
+      "file": "gb_nginx_CVE-2024-24989.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.114358",
+      "file_sha256": "7ab2ad7329eaa63ca823b67b1a33823028a1e0d62b6f2a4ec49b3510bbeb1d6a"
+    },
+    {
+      "file": "gb_nginx_CVE-2024-24990.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.114359",
+      "file_sha256": "1a3053231091a27f805d0c461135886646c63e6b20b24a077eb26d6bdefc0abd"
+    },
+    {
+      "file": "gb_nginx_CVE-2024-7347.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.114764",
+      "file_sha256": "a76fdff62d2c33c8ca133dd88ed23c6e35ee66edf03d97292cf09ab945aaa356"
+    },
+    {
+      "file": "gb_nginx_CVE-2025-23419.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.153971",
+      "file_sha256": "f1f2f24ff2123c1ae5e2343eaa096eef39612735b62d26e5be37e4fce84e67c5"
+    },
+    {
+      "file": "gb_nginx_CVE-2025-53859.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.124888",
+      "file_sha256": "ae5c8373774db63bebe96753bbd85b404ddd9c3e7306310c2039385cc56b48b2"
+    },
+    {
+      "file": "gb_nginx_consolidation.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.113787",
+      "file_sha256": "f134ec137faea1b115544266e92d4affeadb659194b75aee94c5b29b47d016ea"
+    },
+    {
+      "file": "gb_nginx_dos_info_disc_vuln.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.112420",
+      "file_sha256": "def89ff13ac044e70dc1295de76a042d590a8237974fdaa22e5333760fe6381d"
+    },
+    {
+      "file": "gb_nginx_eol.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.148940",
+      "file_sha256": "6941119ab5171019daf5ecda5324ef7e8ca9e303267ae7964da74a27c7bf8c1a"
+    },
+    {
+      "file": "gb_nginx_http_detect.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.100274",
+      "file_sha256": "cc21ae9fd0304e75e90341ba33a7cd8b986c382bb76a40cdb86a701fd55424ff"
+    },
+    {
+      "file": "gb_nginx_http_error_page_detect.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.117545",
+      "file_sha256": "0c0f3bf480abb6ca815dc7390bf870e72a35cf03979bca78175253c1db963c7c"
+    },
+    {
+      "file": "gb_nginx_http_parse_bof_vuln.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.802052",
+      "file_sha256": "6e417878a5874386e2277431f9220f576f4cf9c70291238035d839fad162f1d6"
+    },
+    {
+      "file": "gb_nginx_http_request_bof_vuln.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.801636",
+      "file_sha256": "679f4e5617707c06174c4b01b15409ea470a677c8d38251c4f470c95c598cb53"
+    },
+    {
+      "file": "gb_nginx_info_discl_vuln_aug14.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.117010",
+      "file_sha256": "f4d8aa19af9df8dfd9719146bc616f2c4a60ef0578f77e68acfbc3fd9da68e6d"
+    },
+    {
+      "file": "gb_nginx_info_discl_vuln_sep11.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.117011",
+      "file_sha256": "3cb1aae3e8f1854e97ec10ccaa002e0433e8e50c524dd8fb7fe088b9cad3184a"
+    },
+    {
+      "file": "gb_nginx_infor_disc_vuln.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.811235",
+      "file_sha256": "fe13fbff69a2d72c3edd073932c5350568d20d6b624d0ff2b0d24611f1c62f85"
+    },
+    {
+      "file": "gb_nginx_mult_dos_vuln01_jan16.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.806849",
+      "file_sha256": "01a912ca18e05eb6c05354e89510cd053e11d6567e3fa0f65bb6ca0a664cef4b"
+    },
+    {
+      "file": "gb_nginx_mult_vuln.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.112419",
+      "file_sha256": "a0a44cdb86ded46b8d9b7e47668ca52f7f55644f1e5a51fb07a0885ee5ac6ab4"
+    },
+    {
+      "file": "gb_nginx_mult_vuln.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.142802",
+      "file_sha256": "e3061b181c0c8b12e82f01c87101ccf1daccb6a6761348a6af61f151d6d20032"
+    },
+    {
+      "file": "gb_nginx_mult_vuln_may24.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.152333",
+      "file_sha256": "797ea57f83a7fcff4742d17ba4dfff1acd0339da937efd1efd1cd8318d86637d"
+    },
+    {
+      "file": "gb_nginx_mult_vuln_oct22.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.126185",
+      "file_sha256": "9a8b809177932c38055b3574539b7b7471548cea671e251f3535c320c89d0f4c"
+    },
+    {
+      "file": "gb_nginx_rce_vuln_mar14.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.117009",
+      "file_sha256": "47f39dd4ed814d11416c83686aa0d1c1b8d891c6191a14f5927bc03f449d6f13"
+    },
+    {
+      "file": "gb_nginx_req_smuggling_vuln.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.143351",
+      "file_sha256": "fc9f9ba23e7839a9e3422c90013715def4aad73cb292659859a514c5ce52ec17"
+    },
+    {
+      "file": "gb_nginx_req_smuggling_vuln_may20.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.143920",
+      "file_sha256": "58de2506a3c2ec9ad4355da7f83cbb138eae2f26ac0f5c5cd4d76b26e590cd85"
+    },
+    {
+      "file": "gb_nginx_sec_bypass_vuln_win.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.803222",
+      "file_sha256": "70fa5990fa55ef851e7837172fe78d12dff8d5e63bbec51e8e49c1c2edf971f3"
+    },
+    {
+      "file": "gb_nginx_ssh_login_detect.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.113786",
+      "file_sha256": "e464ae6c960b7bc033641c96d3e57a31392e8e1d6114e36568959508d0e7341a"
+    },
+    {
+      "file": "gb_nginx_webserver_code_exec_vuln.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.803194",
+      "file_sha256": "4aed19779df078dc61c04089f0b4bebe1fad776d2a3976c7f401eae3f420c78b"
+    },
+    {
+      "file": "nginx_36384.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.100276",
+      "file_sha256": "a3b8eda5d525d3a8950acc019659fd0a37338b680b5c74dd2790afd50dea15a8"
+    },
+    {
+      "file": "nginx_36438.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.100277",
+      "file_sha256": "4547a1a4aaa66a9619e313796a4f73344a49539bd7eed125de886c51dac5e0c4"
+    },
+    {
+      "file": "nginx_36490.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.100275",
+      "file_sha256": "2b2438b2bd09c22e89db701df21129a86e90c70013fd2cd589f23c5bf3957da4"
+    },
+    {
+      "file": "nginx_36839.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.100321",
+      "file_sha256": "8dbebbf948376cefd402a42d7b3e27e8798ddbf3cbf6aefc3361e8461db067f6"
+    },
+    {
+      "file": "nginx_37711.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.100441",
+      "file_sha256": "4d5726ba54a422a0d9ca76e48a708e835edaed27be52f7868579a8e12b03ecec"
+    },
+    {
+      "file": "synscan.nasl",
+      "oid": "1.3.6.1.4.1.25623.1.0.11219",
+      "file_sha256": "d822724f590ac7e5f00ca7ba7cdffb9cb4623adaff8ff4d9657d196bcff5411e"
+    }
+  ]
+}

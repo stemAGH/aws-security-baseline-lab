@@ -1,0 +1,23 @@
+{
+  "source": "AWS CLI cloudtrail validate-logs observed in CloudShell",
+  "requested_interval_utc": {
+    "start": "2026-10-25T03:26:00Z",
+    "end": "2026-10-25T04:36:35Z"
+  },
+  "available_validated_interval_utc": {
+    "start": "2026-10-25T03:26:00Z",
+    "end": "2026-10-25T04:23:58Z"
+  },
+  "digest_files": {
+    "valid": 1,
+    "total": 1
+  },
+  "log_files": {
+    "valid": 17,
+    "total": 17
+  },
+  "result": "PASS",
+  "limits": [
+    "One trail, one Region and the available recorded interval only; future delivery is outside this result"
+  ]
+}

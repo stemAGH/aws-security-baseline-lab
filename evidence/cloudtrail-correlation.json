@@ -1,0 +1,11 @@
+{
+  "checked_at_utc": "2026-10-25T03:49:17.113176+00:00",
+  "source": "Observed CloudShell script reading the deployed lab's delivered gzip log objects",
+  "delivered_log_objects_read": 8,
+  "matched_event": "GetBucketVersioning",
+  "matching_event_count": 4,
+  "event_times_utc": ["2026-10-25T03:27:26Z", "2026-10-25T03:28:45Z", "2026-10-25T03:33:26Z", "2026-10-25T03:46:06Z"],
+  "matched_fields": ["event name", "current principal", "exercise bucket", "account", "Region"],
+  "result": "PASS",
+  "limits": ["Single Region only", "No digest-integrity result established by this correlation test", "Raw identities, account and bucket identifiers excluded"]
+}

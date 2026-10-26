@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-25",
+  "deployment": "Sydney baseline deployed; Config update reached UPDATE_COMPLETE, recorder started and both exercise-bucket rules evaluated COMPLIANT",
+  "region": "ap-southeast-2",
+  "source": "AWS CloudShell CLI output observed through the project console",
+  "baseline_verification": {
+    "checked_at_utc": "2026-10-25T03:50:34.257079+00:00",
+    "result": "PASS_WITH_LIMITS",
+    "counts": {
+      "PASS": 19,
+      "SKIP": 2
+    },
+    "skipped": [
+      "Multi-Region coverage",
+      "GuardDuty"
+    ]
+  },
+  "initial_attempt": {
+    "checked_at_utc": "2026-10-25T03:27:19.323652+00:00",
+    "result": "FAIL",
+    "reason": "No first log delivery yet; all other enabled checks passed"
+  },
+  "delivery_observation": {
+    "IsLogging": true,
+    "LatestDeliveryTime": "2026-10-25T03:28:19.716000+00:00",
+    "LatestDeliveryError": null
+  },
+  "checks": [
+    {
+      "check": "Config recorder running successfully",
+      "status": "PASS"
+    },
+    {
+      "check": "Config current compliant evidence: EncryptionRuleName",
+      "status": "PASS"
+    },
+    {
+      "check": "Config current compliant evidence: PublicAccessRuleName",
+      "status": "PASS"
+    }
+  ],
+  "limits": [
+    "Single Region; GuardDuty excluded by owner-approved platform scope",
+    "Owner handling MFA; restricted-human-role enforcement unverified",
+    "Budget contact and alert delivery remain unverified",
+    "Secret retrieval tested as administrator only"
+  ],
+  "config_startup_issue": {
+    "initial_state": "Recorder creation remained in progress; recorder stopped and delivery channel waiting on it",
+    "recovery": "Cancelled update; observed UPDATE_ROLLBACK_COMPLETE; set StartedOnCreate=false, recreated channel after recorder, explicitly started recording",
+    "retest": "UPDATE_COMPLETE; successful recorder status and two current COMPLIANT exercise-bucket evaluations",
+    "first_post_start_verification": "2026-10-25T03:48:31.089005+00:00: both evaluations not yet available; retested after evaluation"
+  },
+  "behavior_evidence": "aws-behavior-summary.json",
+  "event_correlation_evidence": "cloudtrail-correlation.json",
+  "config_delivery_observation": {
+    "date": "2026-10-25",
+    "snapshot_status": "SUCCESS",
+    "history_status": null,
+    "scope": "Lab delivery channel",
+    "source": "Observed describe-delivery-channel-status output"
+  },
+  "integrity_evidence": "cloudtrail-integrity.json"
+}

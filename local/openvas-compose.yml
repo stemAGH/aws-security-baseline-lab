@@ -1,0 +1,153 @@
+# Adapted from https://greenbone.github.io/docs/latest/_static/compose.yaml on 25 October 2026.
+# Pinned images; internal network; no published ports; direct OSP scanner; remediated owned target.
+name: aws-security-lab-openvas
+services:
+  vulnerability-tests:
+    image: registry.community.greenbone.net/community/vulnerability-tests@sha256:eabf7b25dd5257d6b5651051ab8f4d261703a8e3a3db12fa53fec095a6bbdbac
+    environment:
+      FEED_RELEASE: '24.10'
+      KEEP_ALIVE: 1
+    volumes:
+    - vt_data_vol:/mnt
+  notus-data:
+    image: registry.community.greenbone.net/community/notus-data@sha256:8b45628c02454084d2a891859ecd60fa9a8a55403a58ed131eb10457f79f5a5e
+    environment:
+      KEEP_ALIVE: 1
+    volumes:
+    - notus_data_vol:/mnt
+  gpg-data:
+    image: registry.community.greenbone.net/community/gpg-data@sha256:cdb974b92df59a7180c397c69596d05e42ec81d2e74ecc83bb2a3fc41a658cae
+    volumes:
+    - gpg_data_vol:/mnt
+  redis-server:
+    image: registry.community.greenbone.net/community/redis-server@sha256:6da6a7c7221aa3ab231961fd6ca001d552b6a2c7727ac6201c6d8a360baa963a
+    deploy:
+      restart_policy:
+        condition: any
+    volumes:
+    - redis_socket_vol:/run/redis/
+  configure-openvas:
+    image: registry.community.greenbone.net/community/openvas-scanner@sha256:b618f328e59f5c8dff400344bf3fc02122364676b3f009e52eec8f2df4c61111
+    volumes:
+    - openvas_data_vol:/mnt
+    - openvas_log_data_vol:/var/log/openvas
+    command:
+    - /bin/sh
+    - -c
+    - 'printf "table_driven_lsc = yes\nopenvasd_server = http://openvasd:80\n" > /mnt/openvas.conf
+
+      sed "s/127/128/" /etc/openvas/openvas_log.conf | sed ''s/gvm/openvas/'' > /mnt/openvas_log.conf
+
+      chmod 644 /mnt/openvas.conf
+
+      chmod 644 /mnt/openvas_log.conf
+
+      touch /var/log/openvas/openvas.log
+
+      chmod 666 /var/log/openvas/openvas.log
+
+      '
+  openvas:
+    image: registry.community.greenbone.net/community/openvas-scanner@sha256:b618f328e59f5c8dff400344bf3fc02122364676b3f009e52eec8f2df4c61111
+    volumes:
+    - openvas_data_vol:/etc/openvas
+    - openvas_log_data_vol:/var/log/openvas
+    command:
+    - /bin/sh
+    - -c
+    - 'cat /etc/openvas/openvas.conf
+
+      tail -f /var/log/openvas/openvas.log
+
+      '
+    depends_on:
+      configure-openvas:
+        condition: service_completed_successfully
+  openvasd:
+    image: registry.community.greenbone.net/community/openvas-scanner@sha256:b618f328e59f5c8dff400344bf3fc02122364676b3f009e52eec8f2df4c61111
+    deploy:
+      restart_policy:
+        condition: any
+    environment:
+      OPENVASD_MODE: service_notus
+      GNUPGHOME: /etc/openvas/gnupg
+      LISTENING: 0.0.0.0:80
+    volumes:
+    - openvas_data_vol:/etc/openvas
+    - openvas_log_data_vol:/var/log/openvas
+    - gpg_data_vol:/etc/openvas/gnupg
+    - notus_data_vol:/var/lib/notus
+    depends_on:
+      vulnerability-tests:
+        condition: service_healthy
+      notus-data:
+        condition: service_healthy
+      configure-openvas:
+        condition: service_completed_successfully
+      gpg-data:
+        condition: service_completed_successfully
+    networks:
+      default:
+        aliases:
+        - openvasd
+  ospd-openvas:
+    image: registry.community.greenbone.net/community/ospd-openvas@sha256:31a85272abc77521c98451ce6834ed7d2f887e98ff1b26ff3fd94f00d000b169
+    deploy:
+      restart_policy:
+        condition: any
+    hostname: ospd-openvas.local
+    cap_add:
+    - NET_ADMIN
+    - NET_RAW
+    security_opt:
+    - seccomp=unconfined
+    - apparmor=unconfined
+    command:
+    - ospd-openvas
+    - -f
+    - --config
+    - /etc/gvm/ospd-openvas.conf
+    - --notus-feed-dir
+    - /var/lib/notus/advisories
+    - -m
+    - '666'
+    volumes:
+    - gpg_data_vol:/etc/openvas/gnupg
+    - vt_data_vol:/var/lib/openvas/plugins
+    - notus_data_vol:/var/lib/notus
+    - ospd_openvas_socket_vol:/run/ospd
+    - redis_socket_vol:/run/redis/
+    - openvas_data_vol:/etc/openvas/
+    - openvas_log_data_vol:/var/log/openvas
+    depends_on:
+      redis-server:
+        condition: service_started
+      gpg-data:
+        condition: service_completed_successfully
+      configure-openvas:
+        condition: service_completed_successfully
+      vulnerability-tests:
+        condition: service_healthy
+      notus-data:
+        condition: service_healthy
+  gvm-tools:
+    image: registry.community.greenbone.net/community/gvm-tools@sha256:53d294ab34b1a7fe3582826560aa8a6dcdfb395e396b195a03dd7d4b3b9cd885
+    volumes:
+    - ospd_openvas_socket_vol:/run/ospd
+    depends_on:
+    - ospd-openvas
+  lab-target:
+    image: nginx@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951
+    networks:
+    - default
+volumes:
+  gpg_data_vol: null
+  vt_data_vol: null
+  notus_data_vol: null
+  ospd_openvas_socket_vol: null
+  redis_socket_vol: null
+  openvas_data_vol: null
+  openvas_log_data_vol: null
+networks:
+  default:
+    internal: true

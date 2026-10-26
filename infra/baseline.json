@@ -1,0 +1,869 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Learning baseline. Paid resources; review change set. Defaults exclude Config and GuardDuty. No account-wide or human-MFA enforcement.",
+  "Parameters": {
+    "EnvironmentMode": {
+      "Type": "String",
+      "Default": "Project",
+      "AllowedValues": [
+        "Project",
+        "Advanced"
+      ],
+      "Description": "Advanced is an assertion about an already suitable account; this template does not upgrade it."
+    },
+    "EnableConfig": {
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "EnableGuardDuty": {
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "MultiRegionTrail": {
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    }
+  },
+  "Rules": {
+    "AdvancedFeaturesRequired": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Or": [
+              {
+                "Fn::Equals": [
+                  {
+                    "Ref": "EnvironmentMode"
+                  },
+                  "Advanced"
+                ]
+              },
+              {
+                "Fn::And": [
+                  {
+                    "Fn::Equals": [
+                      {
+                        "Ref": "EnableGuardDuty"
+                      },
+                      "false"
+                    ]
+                  },
+                  {
+                    "Fn::Equals": [
+                      {
+                        "Ref": "MultiRegionTrail"
+                      },
+                      "false"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "GuardDuty and multi-Region require an already suitable advanced environment."
+        }
+      ]
+    }
+  },
+  "Conditions": {
+    "IsMultiRegion": {
+      "Fn::Equals": [
+        {
+          "Ref": "MultiRegionTrail"
+        },
+        "true"
+      ]
+    },
+    "WithConfig": {
+      "Fn::Equals": [
+        {
+          "Ref": "EnableConfig"
+        },
+        "true"
+      ]
+    },
+    "WithGuardDuty": {
+      "Fn::Equals": [
+        {
+          "Ref": "EnableGuardDuty"
+        },
+        "true"
+      ]
+    }
+  },
+  "Resources": {
+    "LabKey": {
+      "Type": "AWS::KMS::Key",
+      "Properties": {
+        "Description": "Lab encryption key; retained on stack deletion. Review retained data before scheduling deletion.",
+        "EnableKeyRotation": true,
+        "PendingWindowInDays": 30,
+        "KeyPolicy": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "AccountAdministrationAndIAMDelegation",
+              "Effect": "Allow",
+              "Action": "kms:*",
+              "Resource": "*",
+              "Principal": {
+                "AWS": {
+                  "Fn::Sub": "arn:${AWS::Partition}:iam::${AWS::AccountId}:root"
+                }
+              }
+            },
+            {
+              "Sid": "TrailEncrypt",
+              "Effect": "Allow",
+              "Action": "kms:GenerateDataKey*",
+              "Resource": "*",
+              "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+              },
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceArn": {
+                    "Fn::Sub": "arn:${AWS::Partition}:cloudtrail:${AWS::Region}:${AWS::AccountId}:trail/${AWS::StackName}-trail"
+                  }
+                },
+                "StringLike": {
+                  "kms:EncryptionContext:aws:cloudtrail:arn": {
+                    "Fn::Sub": "arn:${AWS::Partition}:cloudtrail:*:${AWS::AccountId}:trail/${AWS::StackName}-trail"
+                  }
+                }
+              }
+            },
+            {
+              "Sid": "TrailDescribe",
+              "Effect": "Allow",
+              "Action": "kms:DescribeKey",
+              "Resource": "*",
+              "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+              },
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceArn": {
+                    "Fn::Sub": "arn:${AWS::Partition}:cloudtrail:${AWS::Region}:${AWS::AccountId}:trail/${AWS::StackName}-trail"
+                  }
+                }
+              }
+            },
+            {
+              "Fn::If": [
+                "WithConfig",
+                {
+                  "Sid": "ConfigDelivery",
+                  "Effect": "Allow",
+                  "Action": [
+                    "kms:Decrypt",
+                    "kms:GenerateDataKey"
+                  ],
+                  "Resource": "*",
+                  "Principal": {
+                    "Service": "config.amazonaws.com"
+                  },
+                  "Condition": {
+                    "StringEquals": {
+                      "aws:SourceAccount": {
+                        "Ref": "AWS::AccountId"
+                      }
+                    },
+                    "ArnLike": {
+                      "aws:SourceArn": {
+                        "Fn::Sub": "arn:${AWS::Partition}:config:${AWS::Region}:${AWS::AccountId}:*"
+                      }
+                    }
+                  }
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LogBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "IgnorePublicAcls": true,
+          "BlockPublicPolicy": true,
+          "RestrictPublicBuckets": true
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced"
+            }
+          ]
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "aws:kms",
+                "KMSMasterKeyID": {
+                  "Fn::GetAtt": [
+                    "LabKey",
+                    "Arn"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Id": "ShortLabRetention",
+              "Status": "Enabled",
+              "ExpirationInDays": 30,
+              "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 30
+              },
+              "AbortIncompleteMultipartUpload": {
+                "DaysAfterInitiation": 7
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "EvidenceBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "IgnorePublicAcls": true,
+          "BlockPublicPolicy": true,
+          "RestrictPublicBuckets": true
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced"
+            }
+          ]
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "aws:kms",
+                "KMSMasterKeyID": {
+                  "Fn::GetAtt": [
+                    "LabKey",
+                    "Arn"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Id": "ShortLabRetention",
+              "Status": "Enabled",
+              "ExpirationInDays": 30,
+              "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 30
+              },
+              "AbortIncompleteMultipartUpload": {
+                "DaysAfterInitiation": 7
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LogBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "LogBucket"
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "DenyInsecureTransport",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:*",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "LogBucket",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Sub": "${LogBucket.Arn}/*"
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false"
+                }
+              }
+            },
+            {
+              "Sid": "TrailBucketCheck",
+              "Effect": "Allow",
+              "Action": "s3:GetBucketAcl",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LogBucket",
+                  "Arn"
+                ]
+              },
+              "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+              },
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceArn": {
+                    "Fn::Sub": "arn:${AWS::Partition}:cloudtrail:${AWS::Region}:${AWS::AccountId}:trail/${AWS::StackName}-trail"
+                  }
+                }
+              }
+            },
+            {
+              "Sid": "TrailDelivery",
+              "Effect": "Allow",
+              "Action": "s3:PutObject",
+              "Resource": {
+                "Fn::Sub": "${LogBucket.Arn}/cloudtrail/AWSLogs/${AWS::AccountId}/*"
+              },
+              "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+              },
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceArn": {
+                    "Fn::Sub": "arn:${AWS::Partition}:cloudtrail:${AWS::Region}:${AWS::AccountId}:trail/${AWS::StackName}-trail"
+                  },
+                  "s3:x-amz-acl": "bucket-owner-full-control"
+                }
+              }
+            },
+            {
+              "Fn::If": [
+                "WithConfig",
+                {
+                  "Sid": "ConfigBucketCheck",
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetBucketAcl",
+                    "s3:ListBucket"
+                  ],
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "LogBucket",
+                      "Arn"
+                    ]
+                  },
+                  "Principal": {
+                    "Service": "config.amazonaws.com"
+                  },
+                  "Condition": {
+                    "StringEquals": {
+                      "aws:SourceAccount": {
+                        "Ref": "AWS::AccountId"
+                      }
+                    },
+                    "ArnLike": {
+                      "aws:SourceArn": {
+                        "Fn::Sub": "arn:${AWS::Partition}:config:${AWS::Region}:${AWS::AccountId}:*"
+                      }
+                    }
+                  }
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            },
+            {
+              "Fn::If": [
+                "WithConfig",
+                {
+                  "Sid": "ConfigDelivery",
+                  "Effect": "Allow",
+                  "Action": "s3:PutObject",
+                  "Resource": {
+                    "Fn::Sub": "${LogBucket.Arn}/config/AWSLogs/${AWS::AccountId}/Config/*"
+                  },
+                  "Principal": {
+                    "Service": "config.amazonaws.com"
+                  },
+                  "Condition": {
+                    "StringEquals": {
+                      "aws:SourceAccount": {
+                        "Ref": "AWS::AccountId"
+                      },
+                      "s3:x-amz-acl": "bucket-owner-full-control"
+                    },
+                    "ArnLike": {
+                      "aws:SourceArn": {
+                        "Fn::Sub": "arn:${AWS::Partition}:config:${AWS::Region}:${AWS::AccountId}:*"
+                      }
+                    }
+                  }
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "EvidenceBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "EvidenceBucket"
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "DenyInsecureTransport",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:*",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "EvidenceBucket",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Sub": "${EvidenceBucket.Arn}/*"
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false"
+                }
+              }
+            },
+            {
+              "Sid": "DenyExplicitOtherEncryption",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": {
+                "Fn::Sub": "${EvidenceBucket.Arn}/*"
+              },
+              "Condition": {
+                "Null": {
+                  "s3:x-amz-server-side-encryption": "false"
+                },
+                "StringNotEquals": {
+                  "s3:x-amz-server-side-encryption": "aws:kms"
+                }
+              }
+            },
+            {
+              "Sid": "DenyExplicitOtherKey",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": {
+                "Fn::Sub": "${EvidenceBucket.Arn}/*"
+              },
+              "Condition": {
+                "Null": {
+                  "s3:x-amz-server-side-encryption-aws-kms-key-id": "false"
+                },
+                "StringNotEquals": {
+                  "s3:x-amz-server-side-encryption-aws-kms-key-id": {
+                    "Fn::GetAtt": [
+                      "LabKey",
+                      "Arn"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "Sid": "DenyExplicitKmsWithoutKey",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": {
+                "Fn::Sub": "${EvidenceBucket.Arn}/*"
+              },
+              "Condition": {
+                "StringEquals": {
+                  "s3:x-amz-server-side-encryption": "aws:kms"
+                },
+                "Null": {
+                  "s3:x-amz-server-side-encryption-aws-kms-key-id": "true"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Trail": {
+      "Type": "AWS::CloudTrail::Trail",
+      "Properties": {
+        "TrailName": {
+          "Fn::Sub": "${AWS::StackName}-trail"
+        },
+        "S3BucketName": {
+          "Ref": "LogBucket"
+        },
+        "S3KeyPrefix": "cloudtrail",
+        "KMSKeyId": {
+          "Fn::GetAtt": [
+            "LabKey",
+            "Arn"
+          ]
+        },
+        "EnableLogFileValidation": true,
+        "IncludeGlobalServiceEvents": true,
+        "IsLogging": true,
+        "IsMultiRegionTrail": {
+          "Fn::If": [
+            "IsMultiRegion",
+            true,
+            false
+          ]
+        },
+        "EventSelectors": [
+          {
+            "ReadWriteType": "All",
+            "IncludeManagementEvents": true
+          }
+        ]
+      },
+      "DependsOn": [
+        "LogBucketPolicy"
+      ]
+    },
+    "LabSecret": {
+      "Type": "AWS::SecretsManager::Secret",
+      "Properties": {
+        "Name": {
+          "Fn::Sub": "${AWS::StackName}/demo"
+        },
+        "Description": "Disposable generated lab value; no production credentials.",
+        "KmsKeyId": {
+          "Fn::GetAtt": [
+            "LabKey",
+            "Arn"
+          ]
+        },
+        "GenerateSecretString": {
+          "PasswordLength": 32,
+          "ExcludePunctuation": true
+        }
+      },
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "ConfigRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "config.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole",
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceAccount": {
+                    "Ref": "AWS::AccountId"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWS_ConfigRole"
+          }
+        ],
+        "Policies": [
+          {
+            "PolicyName": "LabDelivery",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "BucketCheck",
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetBucketAcl",
+                    "s3:ListBucket"
+                  ],
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "LogBucket",
+                      "Arn"
+                    ]
+                  }
+                },
+                {
+                  "Sid": "WriteConfig",
+                  "Effect": "Allow",
+                  "Action": "s3:PutObject",
+                  "Resource": {
+                    "Fn::Sub": "${LogBucket.Arn}/config/AWSLogs/${AWS::AccountId}/Config/*"
+                  }
+                },
+                {
+                  "Sid": "UseDeliveryKey",
+                  "Effect": "Allow",
+                  "Action": [
+                    "kms:Decrypt",
+                    "kms:GenerateDataKey"
+                  ],
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "LabKey",
+                      "Arn"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "Condition": "WithConfig"
+    },
+    "Recorder": {
+      "Type": "AWS::Config::ConfigurationRecorder",
+      "Properties": {
+        "Name": {
+          "Fn::Sub": "${AWS::StackName}-recorder"
+        },
+        "RoleARN": {
+          "Fn::GetAtt": [
+            "ConfigRole",
+            "Arn"
+          ]
+        },
+        "StartedOnCreate": false,
+        "RecordingGroup": {
+          "AllSupported": false,
+          "IncludeGlobalResourceTypes": false,
+          "ResourceTypes": [
+            "AWS::S3::Bucket"
+          ]
+        },
+        "RecordingMode": {
+          "RecordingFrequency": "CONTINUOUS"
+        }
+      },
+      "Condition": "WithConfig"
+    },
+    "DeliveryChannel": {
+      "Type": "AWS::Config::DeliveryChannel",
+      "Properties": {
+        "Name": {
+          "Fn::Sub": "${AWS::StackName}-delivery"
+        },
+        "S3BucketName": {
+          "Ref": "LogBucket"
+        },
+        "S3KeyPrefix": "config",
+        "S3KmsKeyArn": {
+          "Fn::GetAtt": [
+            "LabKey",
+            "Arn"
+          ]
+        },
+        "ConfigSnapshotDeliveryProperties": {
+          "DeliveryFrequency": "TwentyFour_Hours"
+        }
+      },
+      "Condition": "WithConfig",
+      "DependsOn": [
+        "Recorder",
+        "LogBucketPolicy"
+      ]
+    },
+    "EncryptionRule": {
+      "Type": "AWS::Config::ConfigRule",
+      "Properties": {
+        "ConfigRuleName": {
+          "Fn::Sub": "${AWS::StackName}-encryptionrule"
+        },
+        "Scope": {
+          "ComplianceResourceTypes": [
+            "AWS::S3::Bucket"
+          ],
+          "ComplianceResourceId": {
+            "Ref": "EvidenceBucket"
+          }
+        },
+        "Source": {
+          "Owner": "AWS",
+          "SourceIdentifier": "S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED"
+        }
+      },
+      "Condition": "WithConfig",
+      "DependsOn": [
+        "DeliveryChannel"
+      ]
+    },
+    "PublicAccessRule": {
+      "Type": "AWS::Config::ConfigRule",
+      "Properties": {
+        "ConfigRuleName": {
+          "Fn::Sub": "${AWS::StackName}-publicaccessrule"
+        },
+        "Scope": {
+          "ComplianceResourceTypes": [
+            "AWS::S3::Bucket"
+          ],
+          "ComplianceResourceId": {
+            "Ref": "EvidenceBucket"
+          }
+        },
+        "Source": {
+          "Owner": "AWS",
+          "SourceIdentifier": "S3_BUCKET_LEVEL_PUBLIC_ACCESS_PROHIBITED"
+        }
+      },
+      "Condition": "WithConfig",
+      "DependsOn": [
+        "DeliveryChannel"
+      ]
+    },
+    "Detector": {
+      "Type": "AWS::GuardDuty::Detector",
+      "Properties": {
+        "Enable": true,
+        "FindingPublishingFrequency": "SIX_HOURS",
+        "Features": [
+          {
+            "Name": "S3_DATA_EVENTS",
+            "Status": "DISABLED"
+          },
+          {
+            "Name": "EKS_AUDIT_LOGS",
+            "Status": "DISABLED"
+          },
+          {
+            "Name": "EBS_MALWARE_PROTECTION",
+            "Status": "DISABLED"
+          },
+          {
+            "Name": "RDS_LOGIN_EVENTS",
+            "Status": "DISABLED"
+          },
+          {
+            "Name": "LAMBDA_NETWORK_LOGS",
+            "Status": "DISABLED"
+          },
+          {
+            "Name": "RUNTIME_MONITORING",
+            "Status": "DISABLED"
+          }
+        ]
+      },
+      "Condition": "WithGuardDuty"
+    }
+  },
+  "Outputs": {
+    "LogBucketName": {
+      "Value": {
+        "Ref": "LogBucket"
+      }
+    },
+    "EvidenceBucketName": {
+      "Value": {
+        "Ref": "EvidenceBucket"
+      }
+    },
+    "KeyArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LabKey",
+          "Arn"
+        ]
+      }
+    },
+    "TrailArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "Trail",
+          "Arn"
+        ]
+      }
+    },
+    "SecretArn": {
+      "Value": {
+        "Ref": "LabSecret"
+      }
+    },
+    "RecorderName": {
+      "Value": {
+        "Ref": "Recorder"
+      },
+      "Condition": "WithConfig"
+    },
+    "EncryptionRuleName": {
+      "Value": {
+        "Ref": "EncryptionRule"
+      },
+      "Condition": "WithConfig"
+    },
+    "PublicAccessRuleName": {
+      "Value": {
+        "Ref": "PublicAccessRule"
+      },
+      "Condition": "WithConfig"
+    },
+    "DetectorId": {
+      "Value": {
+        "Ref": "Detector"
+      },
+      "Condition": "WithGuardDuty"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+[
+  {"ParameterKey":"EnvironmentMode","ParameterValue":"Project"},
+  {"ParameterKey":"EnableConfig","ParameterValue":"false"},
+  {"ParameterKey":"EnableGuardDuty","ParameterValue":"false"},
+  {"ParameterKey":"MultiRegionTrail","ParameterValue":"false"}
+]

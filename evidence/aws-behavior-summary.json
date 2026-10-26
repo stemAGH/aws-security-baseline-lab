@@ -1,0 +1,37 @@
+{
+  "checked_at_utc": "2026-10-25T03:33:17.642127+00:00",
+  "source": "Observed CloudShell execution of scripts/verify_behavior.py",
+  "scope": "Deployed exercise bucket and generated demonstration secret",
+  "result": "PASS",
+  "checks": [
+    {
+      "check": "Default upload stored with lab SSE-KMS key",
+      "status": "PASS"
+    },
+    {
+      "check": "Explicit AES256 rejected",
+      "status": "PASS"
+    },
+    {
+      "check": "Explicit other KMS key rejected",
+      "status": "PASS"
+    },
+    {
+      "check": "Explicit KMS without key rejected",
+      "status": "PASS"
+    },
+    {
+      "check": "Anonymous object read denied",
+      "status": "PASS"
+    },
+    {
+      "check": "Current administrator can retrieve generated demo secret",
+      "status": "PASS"
+    }
+  ],
+  "limits": [
+    "Secret value was not printed or saved in evidence",
+    "Restricted identity and MFA were not tested",
+    "Harmless object remains under verification/ with lifecycle expiry"
+  ]
+}

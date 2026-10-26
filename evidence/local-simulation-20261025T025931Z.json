@@ -1,0 +1,26 @@
+{
+  "started_at_utc": "2026-10-25T02:59:31.658960+00:00",
+  "finished_at_utc": "2026-10-25T02:59:45.575782+00:00",
+  "scope": "Local Docker lab only; synthetic .test recipient; automated click",
+  "result": "PASS",
+  "recipients": 1,
+  "messages_captured_by_mailpit": 1,
+  "clicked_results": 1,
+  "capture_credentials": false,
+  "capture_passwords": false,
+  "event_types": [
+    "Campaign Created",
+    "Clicked Link",
+    "Email Sent"
+  ],
+  "network": "Internal Docker network; no published ports; no SMTP relay configured",
+  "limits": [
+    "No real person received mail",
+    "Automated click does not measure human susceptibility",
+    "Not an AWS deployment or OpenVAS scan"
+  ],
+  "images": {
+    "gophish": "sha256:8a57cd171999dcd1fa33f346d6898440913ae14be114ffc850cc678354672d29",
+    "mailpit": "sha256:0790692be935ea4420d085694f7985b1f692ca6a8771ab0e0bd8ba75ac180498"
+  }
+}

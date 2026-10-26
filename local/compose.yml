@@ -1,0 +1,20 @@
+services:
+  gophish:
+    image: gophish/gophish@sha256:8a57cd171999dcd1fa33f346d6898440913ae14be114ffc850cc678354672d29
+    environment:
+      ADMIN_LISTEN_URL: 0.0.0.0:3333
+      ADMIN_USE_TLS: 'false'
+      PHISH_LISTEN_URL: 0.0.0.0:8080
+      PHISH_USE_TLS: 'false'
+      DB_FILE_PATH: /tmp/gophish.db
+    networks: [simulation]
+  mailpit:
+    image: axllent/mailpit@sha256:0790692be935ea4420d085694f7985b1f692ca6a8771ab0e0bd8ba75ac180498
+    networks: [simulation]
+  runner:
+    image: node@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+    command: [node, -e, 'setInterval(() => {}, 60000)']
+    networks: [simulation]
+networks:
+  simulation:
+    internal: true

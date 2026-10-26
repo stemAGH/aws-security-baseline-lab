@@ -1,0 +1,20 @@
+{
+  "control": "Account S3 Block Public Access",
+  "date": "2026-10-25",
+  "scope": "Owner-selected dedicated lab account",
+  "before": "All four account-level flags Off; zero general-purpose buckets observed",
+  "treatment": "Owner authorized enabling all four; saved and confirmed in AWS console",
+  "after_reload": {
+    "BlockPublicAcls": true,
+    "IgnorePublicAcls": true,
+    "BlockPublicPolicy": true,
+    "RestrictPublicBuckets": true
+  },
+  "additional_test": "Account S3 Block Public Access passed in live verifier at 2026-10-25T03:27:19.323652+00:00",
+  "finding": "S3-001",
+  "status": "Closed",
+  "limits": [
+    "No currently exposed bucket was established",
+    "Not a test of every other AWS control"
+  ]
+}

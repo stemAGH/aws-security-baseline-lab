@@ -1,0 +1,89 @@
+{
+  "status": "Completed targeted nginx scan, version upgrade and comparable retest: 2 candidate alarms to 0",
+  "source": "Actual local OSP submissions and preserved completed XML reports; binary version and nginx -T checks",
+  "method": "88 explicit nginx/SYN discovery VTs with automatic dependencies; unauthenticated TCP80; safe_checks=1; optimize_test=1; expand_vhosts=0",
+  "versions": {
+    "openvas": "23.51.0",
+    "ospd_openvas": "22.10.6"
+  },
+  "feed_version": "202610241320",
+  "explicit_vts": 88,
+  "selection_sha256": "e095f331dd71fb9d979796cd9bc32c36289bedc252a6005e869b63a185a45338",
+  "network": "Internal Docker network; no published ports; owned disposable lab-target only",
+  "same_target_address": true,
+  "baseline": {
+    "start_utc": "2026-10-25T04:32:43+00:00",
+    "end_utc": "2026-10-25T04:33:48+00:00",
+    "status": "finished",
+    "progress": 100,
+    "detected_nginx_version": "1.27.5",
+    "service_detected": true,
+    "result_count": 7,
+    "alarm_count": 2,
+    "alarms": [
+      {
+        "name": "Nginx End of Life (EOL) Detection",
+        "oid": "1.3.6.1.4.1.25623.1.0.148940",
+        "reported_severity": 10.0,
+        "quality_of_detection": 30
+      },
+      {
+        "name": "Nginx 0.7.22 - 1.29.0 Information Disclosure Vulnerability",
+        "oid": "1.3.6.1.4.1.25623.1.0.124888",
+        "reported_severity": 3.7,
+        "quality_of_detection": 30
+      }
+    ],
+    "original_report_sha256": "ed6f99affa9477baf3215329546ca5f8c1c2c2c9572937b1c4d39a116c410e70"
+  },
+  "retest": {
+    "start_utc": "2026-10-25T04:36:24+00:00",
+    "end_utc": "2026-10-25T04:37:27+00:00",
+    "status": "finished",
+    "progress": 100,
+    "detected_nginx_version": "1.30.6",
+    "service_detected": true,
+    "result_count": 5,
+    "alarm_count": 0,
+    "alarms": [],
+    "original_report_sha256": "b053c19ebc17db98b0403ba114bec2f9d9570227ae04ce2d9973c64831ce6c97"
+  },
+  "target_images": {
+    "before": "nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10",
+    "after": "nginx@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951"
+  },
+  "triage": [
+    {
+      "candidate": "Legacy nginx branch / scanner EOL classification",
+      "finding": "NGINX-001",
+      "assessment": "Installed binary and remote detection both confirmed 1.27.5; moved to the vendor current stable 1.30.6. EOL date and score are scanner assertions; exploitability was not tested.",
+      "disposition": "Closed for the obsolete-version condition after 1.30.6 was detected and the EOL alarm disappeared"
+    },
+    {
+      "candidate": "CVE-2025-53859 version alarm",
+      "assessment": "Vendor advisory concerns ngx_mail_smtp_module. The observed configuration had HTTP80 listeners and no mail block; SMTP exploit prerequisites were not established. This applicability assessment is an inference from configuration and vendor documentation.",
+      "disposition": "Not treated as a confirmed exploitable HTTP vulnerability; the software upgrade also moved beyond the listed version range and the retest alarm was absent",
+      "source": "https://nginx.org/en/security_advisories.html"
+    }
+  ],
+  "readiness_checks": [
+    "Initializing daemon blocked scan startup",
+    "Mismatched manifest feed rejected before submission",
+    "Loaded feed and nginx anchor test verified; blank total-test count treated as unknown"
+  ],
+  "manager_catalog": "Initial full-manager SCAP import stopped incomplete; direct OSP exercise does not depend on its catalog",
+  "cleanup": {
+    "verified_at_utc": "2026-10-25T04:50:42.956964+00:00",
+    "containers_remaining": 0,
+    "network_remaining": false,
+    "unused_manager_catalog_volumes_removed": 10,
+    "retained": "Scanner cache/config volumes and downloaded images; completed original XML reports stored privately outside the distributable package"
+  },
+  "limits": [
+    "Targeted service coverage, not an authenticated host audit or all-port assessment",
+    "88 is the explicit selection count; dependencies and eligibility affect actual executed tests",
+    "Both original alarms had quality of detection 30 and were version-based; no exploitation or compromise demonstrated",
+    "Zero retest alarms applies only to this target, feed and selection; raw reports remain private"
+  ],
+  "cache_sha256": "5ff0157966934a875df17a78a6efe456cfdf1ca5285d4e0eab51b82de87ad2ad"
+}
